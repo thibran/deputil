@@ -5,6 +5,8 @@ import (
 	"runtime"
 	"strings"
 	"sync"
+	"fmt"
+	"os"
 )
 
 // Dependency checker object.
@@ -79,4 +81,13 @@ func checkDependency(bin, pkg string, errc chan<- string) {
 	} else {
 		errc <- pkg
 	}
+}
+
+// PrintAndExitIfAny missing dependency has been found.
+func PrintAndExitIfAny(missing []string) {
+	if len(missing) == 0 {
+		return
+	}
+	fmt.Printf("Missing dependencies:\n  %s\n", strings.Join(missing, "\n  "))
+	os.Exit(1)
 }

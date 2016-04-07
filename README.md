@@ -34,7 +34,5 @@ missing := deputil.New().
     })).
     Check()
 
-if len(missing) != 0 {
-    // do something
-}
+deputil.PrintAndExitIfAny(missing)
 ```
