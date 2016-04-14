@@ -40,7 +40,7 @@ const (
 	Desk_Gnome
 	Desk_Kde
 	Desk_Lxde
-	Desk_Unit
+	Desk_Unity
 	Desk_Xfce
 	Desk_Unknown
 )
@@ -64,9 +64,13 @@ func Package(a Variations) string {
 func Distribution() Dist {
 	b, err := ioutil.ReadFile("/proc/version")
 	if err != nil {
-		return Dist_Unknown // TODO return UNKNOWN
+		return Dist_Unknown
 	}
-	switch s := strings.ToLower(string(b)); {
+	return dist(string(b))
+}
+
+func dist(procVersion string) Dist {
+	switch s := strings.ToLower(procVersion); {
 	case strings.Contains(s, "arch"):
 		return Dist_Arch
 	case strings.Contains(s, "debian"):
@@ -75,7 +79,7 @@ func Distribution() Dist {
 		return Dist_Fedora
 	case strings.Contains(s, "gentoo"):
 		return Dist_Gentoo
-	case strings.Contains(s, "redhat"):
+	case strings.Contains(s, "red hat"):
 		return Dist_RedHat
 	case strings.Contains(s, "slackware"):
 		return Dist_Slackware
@@ -91,6 +95,10 @@ func Distribution() Dist {
 // Desktop name or Desk_Unknown.
 func Desktop() Desk {
 	desktop := os.Getenv("XDG_CURRENT_DESKTOP")
+	return desk(desktop)
+}
+
+func desk(desktop string) Desk {
 	switch d := strings.ToLower(desktop); {
 	case strings.Contains(d, "cinnamon"):
 		return Desk_Cinnamon
@@ -101,7 +109,7 @@ func Desktop() Desk {
 	case d == "lxde":
 		return Desk_Lxde
 	case d == "unity":
-		return Desk_Unit
+		return Desk_Unity
 	case d == "xfce":
 		return Desk_Xfce
 	default:
@@ -142,7 +150,7 @@ func (d Desk) String() string {
 		return "KDE"
 	case Desk_Lxde:
 		return "LXDE"
-	case Desk_Unit:
+	case Desk_Unity:
 		return "Unity"
 	case Desk_Xfce:
 		return "XFCE"
